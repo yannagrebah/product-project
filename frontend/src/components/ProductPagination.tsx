@@ -73,7 +73,7 @@ export const ProductPagination = memo(function ProductPagination() {
           size="sm"
           onClick={handlePrevPage}
           disabled={page <= 1 || isLoading}
-          className="gap-1 px-2.5 text-2xs font-medium border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100 active:scale-95 transition-all duration-200"
+          className="gap-1 px-2.5 text-2xs font-medium border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100 active:scale-95 transition-all duration-200 cursor-pointer"
         >
           <ChevronLeft className="size-3.5" />
           <span className="hidden sm:inline">Prev</span>
@@ -110,7 +110,7 @@ export const ProductPagination = memo(function ProductPagination() {
               className={`text-2xs font-semibold rounded-xl h-7 w-7 transition-all duration-200 active:scale-95 ${
                 p === page
                   ? 'bg-zinc-900 text-white font-bold border-transparent shadow-xs scale-105'
-                  : 'border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'
+                  : 'border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 cursor-pointer'
               }`}
             >
               {p}
@@ -143,7 +143,7 @@ export const ProductPagination = memo(function ProductPagination() {
           size="sm"
           onClick={handleNextPage}
           disabled={page >= totalPages || isLoading}
-          className="gap-1 px-2.5 text-2xs font-medium border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100 active:scale-95 transition-all duration-200"
+          className="gap-1 px-2.5 text-2xs font-medium border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100 active:scale-95 transition-all duration-200 cursor-pointer"
         >
           <span className="hidden sm:inline">Next</span>
           <ChevronRight className="size-3.5" />
