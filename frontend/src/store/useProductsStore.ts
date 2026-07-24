@@ -19,6 +19,7 @@ export interface ProductsState {
   search: string;
   viewMode: ViewMode;
   isLoading: boolean;
+  isInitialized: boolean;
   error: string | null;
 
   // Actions
@@ -32,9 +33,23 @@ export interface ProductsState {
   fetchProducts: () => Promise<void>;
 }
 
-const API_BASE_URL =
+export const API_BASE_URL =
   (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) ||
   'http://localhost:3000';
+
+function areProductsStructurallyEqual(a: Product[], b: Product[]): boolean {
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  return a.every(
+    (item, index) =>
+      item.id === b[index].id &&
+      item.name === b[index].name &&
+      item.price === b[index].price &&
+      item.category === b[index].category &&
+      item.stock_status === b[index].stock_status &&
+      item.imageUrl === b[index].imageUrl,
+  );
+}
 
 export const useProductsStore = create<ProductsState>((set, get) => ({
   products: [],
@@ -47,6 +62,7 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
   search: '',
   viewMode: 'grid',
   isLoading: false,
+  isInitialized: false,
   error: null,
 
   setPage: (page: number) => {
@@ -70,6 +86,8 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
   },
 
   setSearch: (search: string) => {
+    const currentSearch = get().search;
+    if (currentSearch === search) return;
     set({ search, page: 1 });
     void get().fetchProducts();
   },
@@ -85,7 +103,7 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
 
   fetchProducts: async () => {
     set({ isLoading: true, error: null });
-    const { page, limit, category, stock_status, search } = get();
+    const { page, limit, category, stock_status, search, products: currentProducts } = get();
 
     const params = new URLSearchParams();
     params.set('page', page.toString());
@@ -109,17 +127,24 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
         throw new Error(`Failed to fetch products (${response.status})`);
       }
       const data = (await response.json()) as PaginatedProductsResponse;
+
+      // Retain existing array reference if returned product list is structurally identical
+      const isIdentical = areProductsStructurallyEqual(currentProducts, data.data);
+      const stableProducts = isIdentical ? currentProducts : data.data;
+
       set({
-        products: data.data,
+        products: stableProducts,
         total: data.total,
         page: data.page,
         limit: data.limit,
         totalPages: data.totalPages,
         isLoading: false,
+        isInitialized: true,
       });
     } catch (err) {
       set({
         isLoading: false,
+        isInitialized: true,
         error:
           err instanceof Error
             ? err.message
