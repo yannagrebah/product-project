@@ -24,4 +24,5 @@ export interface GetProductsQuery {
   limit?: number;
   category?: ProductCategory;
   stock_status?: ProductStockStatus;
+  search?: string;
 }
