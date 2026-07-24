@@ -47,13 +47,16 @@ export default {
       const chunks: Uint8Array[] = [];
 
       // Intercept response writes
-      const origWrite = res.write.bind(res);
-      const origEnd = res.end.bind(res);
 
-      (res as any).write = (chunk: any, encoding?: any, callback?: any) => {
+      res.write = (chunk: any, encoding?: any) => {
         if (chunk) {
           if (typeof chunk === 'string') {
-            chunks.push(Buffer.from(chunk, typeof encoding === 'string' ? encoding : 'utf8'));
+            chunks.push(
+              Buffer.from(
+                chunk,
+                typeof encoding === 'string' ? encoding : 'utf8',
+              ),
+            );
           } else if (Buffer.isBuffer(chunk) || chunk instanceof Uint8Array) {
             chunks.push(chunk);
           }
@@ -61,10 +64,15 @@ export default {
         return true;
       };
 
-      (res as any).end = (chunk?: any, encoding?: any, callback?: any) => {
+      res.end = ((chunk?: any, encoding?: any) => {
         if (chunk) {
           if (typeof chunk === 'string') {
-            chunks.push(Buffer.from(chunk, typeof encoding === 'string' ? encoding : 'utf8'));
+            chunks.push(
+              Buffer.from(
+                chunk,
+                typeof encoding === 'string' ? encoding : 'utf8',
+              ),
+            );
           } else if (Buffer.isBuffer(chunk) || chunk instanceof Uint8Array) {
             chunks.push(chunk);
           }
@@ -89,16 +97,23 @@ export default {
             headers,
           }),
         );
-      };
+      }) as typeof res.end;
 
       try {
         app(req, res);
-        if (request.method !== 'GET' && request.method !== 'HEAD' && request.body) {
+        if (
+          request.method !== 'GET' &&
+          request.method !== 'HEAD' &&
+          request.body
+        ) {
           // If request body exists, stream it to req
-          request.arrayBuffer().then((buf) => {
-            req.push(Buffer.from(buf));
-            req.push(null);
-          }).catch(reject);
+          request
+            .arrayBuffer()
+            .then((buf) => {
+              req.push(Buffer.from(buf));
+              req.push(null);
+            })
+            .catch(reject);
         } else {
           req.push(null);
         }
