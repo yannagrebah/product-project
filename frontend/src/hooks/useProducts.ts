@@ -52,7 +52,11 @@ export function useProducts(): UseProductsReturn {
   } = useProductsStore();
 
   useEffect(() => {
-    void fetchProducts();
+    // Only auto-fetch once on initial uninitialized mount
+    const state = useProductsStore.getState();
+    if (!state.isInitialized && !state.isLoading && !state.error) {
+      void fetchProducts();
+    }
   }, [fetchProducts]);
 
   return {
