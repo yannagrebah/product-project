@@ -1,6 +1,21 @@
-import { ProductFilters } from "./components/ProductFilters";
-import { ProductGrid } from "./components/ProductGrid";
-import { ProductPagination } from "./components/ProductPagination";
+import { Suspense, lazy } from "react";
+import { ProductSkeleton, FiltersSkeleton } from "./components/ProductSkeleton";
+
+const ProductFilters = lazy(() =>
+  import("./components/ProductFilters").then((m) => ({
+    default: m.ProductFilters,
+  })),
+);
+const ProductGrid = lazy(() =>
+  import("./components/ProductGrid").then((m) => ({
+    default: m.ProductGrid,
+  })),
+);
+const ProductPagination = lazy(() =>
+  import("./components/ProductPagination").then((m) => ({
+    default: m.ProductPagination,
+  })),
+);
 
 export function App() {
   return (
@@ -28,26 +43,37 @@ export function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        {/* Minimal Filters Section */}
+        {/* Minimal Filters Section with Suspense */}
         <section aria-label="Product Filters">
-          <ProductFilters />
+          <Suspense fallback={<FiltersSkeleton />}>
+            <ProductFilters />
+          </Suspense>
         </section>
 
-        {/* Product Catalog Grid */}
+        {/* Product Catalog Grid with Suspense */}
         <section aria-label="Product Catalog List" className="min-h-105">
-          <ProductGrid />
+          <Suspense fallback={<ProductSkeleton />}>
+            <ProductGrid />
+          </Suspense>
         </section>
 
-        {/* Minimal Pagination */}
+        {/* Minimal Pagination with Suspense */}
         <section aria-label="Product Pagination">
-          <ProductPagination />
+          <Suspense fallback={null}>
+            <ProductPagination />
+          </Suspense>
         </section>
       </main>
 
       {/* Clean Footer */}
       <footer className="w-full border-t border-zinc-200/80 py-6 text-center text-2xs text-zinc-500 bg-white">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>© {new Date().getFullYear()} yannagrebah</span>
+          <span>
+            © {new Date().getFullYear()}{" "}
+            <a href="https://github.com/yannagrebah/product-project">
+              yannagrebah
+            </a>
+          </span>
           <span className="font-mono text-zinc-400">
             NestJS • React • Vite • Zustand • Tailwind
           </span>
