@@ -1,35 +1,38 @@
-import { memo, useCallback, useMemo, useState, useEffect, useRef } from 'react';
-import { useProducts } from '../hooks/useProducts';
+import { memo, useCallback, useMemo, useState, useEffect, useRef } from "react";
+import { useProducts } from "../hooks/useProducts";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from './ui/select';
-import { Button } from './ui/button';
-import { RotateCcw, LayoutGrid, List, Search, X } from 'lucide-react';
-import type { ProductCategory, ProductStockStatus } from '@product-project/shared';
+} from "./ui/select";
+import { Button } from "./ui/button";
+import { RotateCcw, LayoutGrid, List, Search, X } from "lucide-react";
+import type {
+  ProductCategory,
+  ProductStockStatus,
+} from "@product-project/shared";
 
 const CATEGORY_LABELS: Record<string, string> = {
-  ALL: 'All Categories',
-  Electronics: 'Electronics',
-  Clothing: 'Clothing',
-  Food: 'Food',
+  ALL: "All Categories",
+  Electronics: "Electronics",
+  Clothing: "Clothing",
+  Food: "Food",
 };
 
 const STOCK_STATUS_LABELS: Record<string, string> = {
-  ALL: 'All Statuses',
-  in_stock: 'In Stock',
-  low_stock: 'Low Stock',
-  out_of_stock: 'Out of Stock',
+  ALL: "All Statuses",
+  in_stock: "In Stock",
+  low_stock: "Low Stock",
+  out_of_stock: "Out of Stock",
 };
 
 const LIMIT_LABELS: Record<string, string> = {
-  '5': '5 per page',
-  '10': '10 per page',
-  '15': '15 per page',
-  '20': '20 per page',
+  "5": "5 per page",
+  "10": "10 per page",
+  "15": "15 per page",
+  "20": "20 per page",
 };
 
 const SEARCH_DEBOUNCE_MS = 300;
@@ -68,20 +71,22 @@ export const ProductFilters = memo(function ProductFilters() {
   }, []);
 
   const hasActiveFilters = useMemo(
-    () => category !== null || stock_status !== null || search.trim() !== '',
+    () => category !== null || stock_status !== null || search.trim() !== "",
     [category, stock_status, search],
   );
 
   const handleCategoryChange = useCallback(
     (val: string | null) => {
-      setCategory(val === 'ALL' || !val ? null : (val as ProductCategory));
+      setCategory(val === "ALL" || !val ? null : (val as ProductCategory));
     },
     [setCategory],
   );
 
   const handleStockStatusChange = useCallback(
     (val: string | null) => {
-      setStockStatus(val === 'ALL' || !val ? null : (val as ProductStockStatus));
+      setStockStatus(
+        val === "ALL" || !val ? null : (val as ProductStockStatus),
+      );
     },
     [setStockStatus],
   );
@@ -107,15 +112,15 @@ export const ProductFilters = memo(function ProductFilters() {
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
-    setLocalSearch('');
-    setSearch('');
+    setLocalSearch("");
+    setSearch("");
   }, [setSearch]);
 
   const handleResetAll = useCallback(() => {
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
-    setLocalSearch('');
+    setLocalSearch("");
     resetFilters();
   }, [resetFilters]);
 
@@ -127,12 +132,12 @@ export const ProductFilters = memo(function ProductFilters() {
   );
 
   const selectedCategoryLabel = useMemo(
-    () => CATEGORY_LABELS[category || 'ALL'] || 'All Categories',
+    () => CATEGORY_LABELS[category || "ALL"] || "All Categories",
     [category],
   );
 
   const selectedStockStatusLabel = useMemo(
-    () => STOCK_STATUS_LABELS[stock_status || 'ALL'] || 'All Statuses',
+    () => STOCK_STATUS_LABELS[stock_status || "ALL"] || "All Statuses",
     [stock_status],
   );
 
@@ -154,11 +159,11 @@ export const ProductFilters = memo(function ProductFilters() {
             <Button
               variant="ghost"
               size="icon-sm"
-              onClick={() => setViewMode('grid')}
+              onClick={() => setViewMode("grid")}
               className={`h-7 w-7 rounded-lg transition-all duration-200 active:scale-95 ${
-                viewMode === 'grid'
-                  ? 'bg-white shadow-2xs text-zinc-900 font-semibold scale-105'
-                  : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/50'
+                viewMode === "grid"
+                  ? "bg-white shadow-2xs text-zinc-900 font-semibold scale-105"
+                  : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/50 cursor-pointer"
               }`}
               title="Grid View"
             >
@@ -167,11 +172,11 @@ export const ProductFilters = memo(function ProductFilters() {
             <Button
               variant="ghost"
               size="icon-sm"
-              onClick={() => setViewMode('list')}
+              onClick={() => setViewMode("list")}
               className={`h-7 w-7 rounded-lg transition-all duration-200 active:scale-95 ${
-                viewMode === 'list'
-                  ? 'bg-white shadow-2xs text-zinc-900 font-semibold scale-105'
-                  : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/50'
+                viewMode === "list"
+                  ? "bg-white shadow-2xs text-zinc-900 font-semibold scale-105"
+                  : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/50 cursor-pointer"
               }`}
               title="List View"
             >
@@ -227,10 +232,10 @@ export const ProductFilters = memo(function ProductFilters() {
             Category
           </label>
           <Select
-            value={category || 'ALL'}
+            value={category || "ALL"}
             onValueChange={handleCategoryChange}
           >
-            <SelectTrigger className="w-full bg-white border-zinc-200 text-zinc-800 focus:border-zinc-400 hover:border-zinc-300 transition-colors duration-200">
+            <SelectTrigger className="w-full bg-white border-zinc-200 text-zinc-800 focus:border-zinc-400 hover:border-zinc-300 transition-colors duration-200 cursor-pointer">
               <SelectValue placeholder="All Categories">
                 {selectedCategoryLabel}
               </SelectValue>
@@ -250,10 +255,10 @@ export const ProductFilters = memo(function ProductFilters() {
             Stock Status
           </label>
           <Select
-            value={stock_status || 'ALL'}
+            value={stock_status || "ALL"}
             onValueChange={handleStockStatusChange}
           >
-            <SelectTrigger className="w-full bg-white border-zinc-200 text-zinc-800 focus:border-zinc-400 hover:border-zinc-300 transition-colors duration-200">
+            <SelectTrigger className="w-full bg-white border-zinc-200 text-zinc-800 focus:border-zinc-400 hover:border-zinc-300 transition-colors duration-200 cursor-pointer">
               <SelectValue placeholder="All Stock Statuses">
                 {selectedStockStatusLabel}
               </SelectValue>
@@ -272,11 +277,8 @@ export const ProductFilters = memo(function ProductFilters() {
           <label className="text-3xs uppercase tracking-widest font-medium text-zinc-500 px-1">
             Display Limit
           </label>
-          <Select
-            value={limit.toString()}
-            onValueChange={handleLimitChange}
-          >
-            <SelectTrigger className="w-full bg-white border-zinc-200 text-zinc-800 focus:border-zinc-400 hover:border-zinc-300 transition-colors duration-200">
+          <Select value={limit.toString()} onValueChange={handleLimitChange}>
+            <SelectTrigger className="w-full bg-white border-zinc-200 text-zinc-800 focus:border-zinc-400 hover:border-zinc-300 transition-colors duration-200 cursor-pointer">
               <SelectValue placeholder="10 per page">
                 {selectedLimitLabel}
               </SelectValue>
