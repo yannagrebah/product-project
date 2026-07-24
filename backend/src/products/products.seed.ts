@@ -53,7 +53,7 @@ export const PRODUCTS_SEED: Product[] = [
     price: 59.99,
     stock_status: 'in_stock',
     imageUrl:
-      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?w=600&auto=format&fit=crop',
   },
   {
     id: 7,
@@ -62,7 +62,7 @@ export const PRODUCTS_SEED: Product[] = [
     price: 89.0,
     stock_status: 'low_stock',
     imageUrl:
-      'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?w=600&auto=format&fit=crop',
   },
   {
     id: 8,
@@ -125,7 +125,7 @@ export const PRODUCTS_SEED: Product[] = [
     price: 29.99,
     stock_status: 'out_of_stock',
     imageUrl:
-      'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1624893464449-22a7e40de7c9?w=600&auto=format&fit=crop',
   },
   {
     id: 15,
@@ -143,7 +143,7 @@ export const PRODUCTS_SEED: Product[] = [
     price: 49.99,
     stock_status: 'in_stock',
     imageUrl:
-      'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1625750319971-ee4b61e68df8?w=600&auto=format&fit=crop',
   },
   {
     id: 17,
@@ -152,7 +152,7 @@ export const PRODUCTS_SEED: Product[] = [
     price: 39.99,
     stock_status: 'low_stock',
     imageUrl:
-      'https://images.unsplash.com/photo-1625842268584-8f3296236761?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1616578273577-5d54546f4dec?w=600&auto=format&fit=crop',
   },
   {
     id: 18,
@@ -179,7 +179,7 @@ export const PRODUCTS_SEED: Product[] = [
     price: 74.99,
     stock_status: 'low_stock',
     imageUrl:
-      'https://images.unsplash.com/photo-1544441893-675973e31985?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1713379796475-d061422dca01?w=600&auto=format&fit=crop',
   },
   {
     id: 21,
@@ -188,7 +188,7 @@ export const PRODUCTS_SEED: Product[] = [
     price: 29.99,
     stock_status: 'in_stock',
     imageUrl:
-      'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1648483092137-6e63796c8b06?w=600&auto=format&fit=crop',
   },
   {
     id: 22,
@@ -197,7 +197,7 @@ export const PRODUCTS_SEED: Product[] = [
     price: 9.99,
     stock_status: 'in_stock',
     imageUrl:
-      'https://images.unsplash.com/photo-1517093728432-a0440f8d45af?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1621470626764-0e8c9303800a?w=600&auto=format&fit=crop',
   },
   {
     id: 23,
@@ -206,7 +206,7 @@ export const PRODUCTS_SEED: Product[] = [
     price: 8.5,
     stock_status: 'low_stock',
     imageUrl:
-      'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1614759258004-39da973d3268?w=600&auto=format&fit=crop',
   },
   {
     id: 24,
@@ -220,7 +220,7 @@ export const PRODUCTS_SEED: Product[] = [
   {
     id: 25,
     name: 'Insulated Smart Hydration Bottle',
-    category: 'Electronics',
+    category: 'Food',
     price: 59.99,
     stock_status: 'in_stock',
     imageUrl:
