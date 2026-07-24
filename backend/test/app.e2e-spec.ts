@@ -75,6 +75,17 @@ describe('Products E2E Matrix', () => {
     expect(body.data.every((p: Product) => p.category === 'Food')).toBe(true);
   });
 
+  it('GET /products - search parameter filters products by name', async () => {
+    const res = await request(getHttpServer())
+      .get('/products?search=Watch')
+      .expect(200);
+
+    const body = res.body as PaginatedProductsResponse;
+    expect(
+      body.data.every((p: Product) => p.name.toLowerCase().includes('watch')),
+    ).toBe(true);
+  });
+
   it('GET /products - invalid query params (page < 1) returns 400 Bad Request', async () => {
     await request(getHttpServer()).get('/products?page=0').expect(400);
   });
@@ -91,16 +102,18 @@ describe('Products E2E Matrix', () => {
       .expect(400);
   });
 
-  it('GET /products - combining both category and stock_status returns filtered results', async () => {
+  it('GET /products - combining category, stock_status and search returns filtered results', async () => {
     const res = await request(getHttpServer())
-      .get('/products?category=Electronics&stock_status=in_stock')
+      .get('/products?category=Electronics&stock_status=in_stock&search=Watch')
       .expect(200);
 
     const body = res.body as PaginatedProductsResponse;
     expect(
       body.data.every(
         (p: Product) =>
-          p.category === 'Electronics' && p.stock_status === 'in_stock',
+          p.category === 'Electronics' &&
+          p.stock_status === 'in_stock' &&
+          p.name.toLowerCase().includes('watch'),
       ),
     ).toBe(true);
   });
