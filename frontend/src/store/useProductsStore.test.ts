@@ -11,6 +11,7 @@ describe('useProductsStore', () => {
       totalPages: 1,
       category: null,
       stock_status: null,
+      viewMode: 'grid',
       isLoading: false,
       error: null,
     });
@@ -25,8 +26,17 @@ describe('useProductsStore', () => {
     expect(state.limit).toBe(10);
     expect(state.category).toBeNull();
     expect(state.stock_status).toBeNull();
+    expect(state.viewMode).toBe('grid');
     expect(state.isLoading).toBe(false);
     expect(state.error).toBeNull();
+  });
+
+  it('should toggle view mode between grid and list', () => {
+    useProductsStore.getState().setViewMode('list');
+    expect(useProductsStore.getState().viewMode).toBe('list');
+
+    useProductsStore.getState().setViewMode('grid');
+    expect(useProductsStore.getState().viewMode).toBe('grid');
   });
 
   it('should preserve stock_status when setting category (multi-criteria filtering)', () => {

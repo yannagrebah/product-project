@@ -6,6 +6,8 @@ import type {
   PaginatedProductsResponse,
 } from '@product-project/shared';
 
+export type ViewMode = 'grid' | 'list';
+
 export interface ProductsState {
   products: Product[];
   total: number;
@@ -14,6 +16,7 @@ export interface ProductsState {
   totalPages: number;
   category: ProductCategory | null;
   stock_status: ProductStockStatus | null;
+  viewMode: ViewMode;
   isLoading: boolean;
   error: string | null;
 
@@ -22,6 +25,7 @@ export interface ProductsState {
   setLimit: (limit: number) => void;
   setCategory: (category: ProductCategory | null) => void;
   setStockStatus: (stockStatus: ProductStockStatus | null) => void;
+  setViewMode: (viewMode: ViewMode) => void;
   resetFilters: () => void;
   fetchProducts: () => Promise<void>;
 }
@@ -38,6 +42,7 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
   totalPages: 1,
   category: null,
   stock_status: null,
+  viewMode: 'grid',
   isLoading: false,
   error: null,
 
@@ -52,15 +57,17 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
   },
 
   setCategory: (category: ProductCategory | null) => {
-    // Multi-criteria filtering: set category without clearing stock_status
     set({ category, page: 1 });
     void get().fetchProducts();
   },
 
   setStockStatus: (stock_status: ProductStockStatus | null) => {
-    // Multi-criteria filtering: set stock_status without clearing category
     set({ stock_status, page: 1 });
     void get().fetchProducts();
+  },
+
+  setViewMode: (viewMode: ViewMode) => {
+    set({ viewMode });
   },
 
   resetFilters: () => {
