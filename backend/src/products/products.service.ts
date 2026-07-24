@@ -8,7 +8,7 @@ export class ProductsService {
   private readonly products: Product[] = PRODUCTS_SEED;
 
   getProducts(query: GetProductsDto): PaginatedProductsResponse {
-    const { page = 1, limit = 10, category, stock_status } = query;
+    const { page = 1, limit = 10, category, stock_status, search } = query;
 
     let filteredProducts = this.products;
 
@@ -21,6 +21,13 @@ export class ProductsService {
     if (stock_status) {
       filteredProducts = filteredProducts.filter(
         (p) => p.stock_status === stock_status,
+      );
+    }
+
+    if (search && search.trim() !== '') {
+      const searchLower = search.trim().toLowerCase();
+      filteredProducts = filteredProducts.filter((p) =>
+        p.name.toLowerCase().includes(searchLower),
       );
     }
 

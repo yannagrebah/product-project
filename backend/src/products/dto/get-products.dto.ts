@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import type {
   ProductCategory,
@@ -29,4 +29,8 @@ export class GetProductsDto {
     message: 'stock_status must be one of: in_stock, low_stock, out_of_stock',
   })
   stock_status?: ProductStockStatus;
+
+  @IsOptional()
+  @IsString({ message: 'search must be a string' })
+  search?: string;
 }

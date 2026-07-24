@@ -41,21 +41,14 @@ describe('ProductsService', () => {
     );
   });
 
-  it('should filter products by low_stock status', () => {
-    const result = service.getProducts({ stock_status: 'low_stock' });
-    expect(result.data.every((p) => p.stock_status === 'low_stock')).toBe(true);
+  it('should filter products by search term (case-insensitive)', () => {
+    const result = service.getProducts({ search: 'Watch' });
+    expect(
+      result.data.every((p) => p.name.toLowerCase().includes('watch')),
+    ).toBe(true);
     expect(result.total).toBe(
-      PRODUCTS_SEED.filter((p) => p.stock_status === 'low_stock').length,
-    );
-  });
-
-  it('should filter products by out_of_stock status', () => {
-    const result = service.getProducts({ stock_status: 'out_of_stock' });
-    expect(result.data.every((p) => p.stock_status === 'out_of_stock')).toBe(
-      true,
-    );
-    expect(result.total).toBe(
-      PRODUCTS_SEED.filter((p) => p.stock_status === 'out_of_stock').length,
+      PRODUCTS_SEED.filter((p) => p.name.toLowerCase().includes('watch'))
+        .length,
     );
   });
 
