@@ -1,0 +1,13 @@
+{
+  "name": "product-project-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel --filter backend --filter frontend dev",
+    "start": "pnpm --parallel --filter backend --filter frontend dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "test:e2e": "pnpm --filter backend test:e2e",
+    "lint": "pnpm -r lint"
+  }
+}
