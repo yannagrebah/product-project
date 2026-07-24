@@ -23,8 +23,8 @@ export const ProductGrid = memo(function ProductGrid() {
     ));
   }, [products, viewMode]);
 
-  // Skeleton Loader State
-  if (isLoading) {
+  // Initial Skeleton Loader State (only when no products are loaded yet)
+  if (isLoading && products.length === 0) {
     if (viewMode === 'list') {
       return (
         <div className="flex flex-col gap-3 w-full">
@@ -65,7 +65,7 @@ export const ProductGrid = memo(function ProductGrid() {
   }
 
   // Error State
-  if (error) {
+  if (error && products.length === 0) {
     return (
       <div className="w-full rounded-2xl border border-rose-200 bg-rose-50/50 p-8 text-center space-y-3 my-6 animate-in fade-in-0 zoom-in-95 duration-300">
         <div className="space-y-1">
@@ -89,8 +89,8 @@ export const ProductGrid = memo(function ProductGrid() {
     );
   }
 
-  // Empty State
-  if (products.length === 0) {
+  // Empty State (when search/filters yield zero results and loading is complete)
+  if (!isLoading && products.length === 0) {
     return (
       <div className="w-full rounded-2xl border border-zinc-200/80 bg-white p-12 text-center space-y-3 my-6 shadow-2xs animate-in fade-in-0 zoom-in-95 duration-300">
         <div className="space-y-1">
@@ -98,7 +98,7 @@ export const ProductGrid = memo(function ProductGrid() {
             No matching products
           </h3>
           <p className="text-2xs text-zinc-500 max-w-md mx-auto">
-            No items matched your category or stock availability filters.
+            No items matched your search query or filter criteria.
           </p>
         </div>
         <Button
@@ -113,13 +113,23 @@ export const ProductGrid = memo(function ProductGrid() {
     );
   }
 
-  // Active Product Container (Grid or List)
+  // Active Product Container (Grid or List) with non-disruptive background loading opacity
+  const containerClasses = `transition-opacity duration-300 ${
+    isLoading ? 'opacity-70 pointer-events-none' : 'opacity-100'
+  }`;
+
   if (viewMode === 'list') {
-    return <div className="flex flex-col gap-3 w-full">{productItems}</div>;
+    return (
+      <div className={`flex flex-col gap-3 w-full ${containerClasses}`}>
+        {productItems}
+      </div>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
+    <div
+      className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full ${containerClasses}`}
+    >
       {productItems}
     </div>
   );

@@ -11,6 +11,7 @@ describe('useProductsStore', () => {
       totalPages: 1,
       category: null,
       stock_status: null,
+      search: '',
       viewMode: 'grid',
       isLoading: false,
       error: null,
@@ -26,9 +27,80 @@ describe('useProductsStore', () => {
     expect(state.limit).toBe(10);
     expect(state.category).toBeNull();
     expect(state.stock_status).toBeNull();
+    expect(state.search).toBe('');
     expect(state.viewMode).toBe('grid');
     expect(state.isLoading).toBe(false);
     expect(state.error).toBeNull();
+  });
+
+  it('should preserve products array reference when returned data is structurally identical', async () => {
+    const initialProducts = [
+      {
+        id: 1,
+        name: 'Headphones',
+        category: 'Electronics' as const,
+        price: 150,
+        stock_status: 'in_stock' as const,
+        imageUrl: 'https://images.unsplash.com/photo-1',
+      },
+    ];
+
+    useProductsStore.setState({ products: initialProducts });
+
+    vi.spyOn(globalThis, 'fetch').mockImplementation(() =>
+      Promise.resolve(
+        new Response(
+          JSON.stringify({
+            data: [
+              {
+                id: 1,
+                name: 'Headphones',
+                category: 'Electronics',
+                price: 150,
+                stock_status: 'in_stock',
+                imageUrl: 'https://images.unsplash.com/photo-1',
+              },
+            ],
+            total: 1,
+            page: 1,
+            limit: 10,
+            totalPages: 1,
+          }),
+          { status: 200 },
+        ),
+      ),
+    );
+
+    await useProductsStore.getState().fetchProducts();
+
+    const state = useProductsStore.getState();
+    // Reference equality check!
+    expect(state.products).toBe(initialProducts);
+  });
+
+  it('should update search query and reset page to 1', () => {
+    useProductsStore.setState({ page: 3 });
+
+    vi.spyOn(globalThis, 'fetch').mockImplementation(() =>
+      Promise.resolve(
+        new Response(
+          JSON.stringify({
+            data: [],
+            total: 0,
+            page: 1,
+            limit: 10,
+            totalPages: 1,
+          }),
+          { status: 200 },
+        ),
+      ),
+    );
+
+    useProductsStore.getState().setSearch('Watch');
+
+    const state = useProductsStore.getState();
+    expect(state.search).toBe('Watch');
+    expect(state.page).toBe(1);
   });
 
   it('should toggle view mode between grid and list', () => {
@@ -91,8 +163,13 @@ describe('useProductsStore', () => {
     expect(state.page).toBe(1);
   });
 
-  it('should reset all filters cleanly', () => {
-    useProductsStore.setState({ category: 'Food', stock_status: 'in_stock', page: 3 });
+  it('should reset all filters and search query cleanly', () => {
+    useProductsStore.setState({
+      category: 'Food',
+      stock_status: 'in_stock',
+      search: 'Apple',
+      page: 3,
+    });
 
     vi.spyOn(globalThis, 'fetch').mockImplementation(() =>
       Promise.resolve(
@@ -114,16 +191,21 @@ describe('useProductsStore', () => {
     const state = useProductsStore.getState();
     expect(state.category).toBeNull();
     expect(state.stock_status).toBeNull();
+    expect(state.search).toBe('');
     expect(state.page).toBe(1);
   });
 
-  it('should fetch products with combined filters query parameters', async () => {
-    useProductsStore.setState({ category: 'Electronics', stock_status: 'in_stock' });
+  it('should fetch products with combined filters and search query parameters', async () => {
+    useProductsStore.setState({
+      category: 'Electronics',
+      stock_status: 'in_stock',
+      search: 'Watch',
+    });
 
     const mockProducts = [
       {
         id: 1,
-        name: 'Headphones',
+        name: 'Smart Watch',
         category: 'Electronics' as const,
         price: 100,
         stock_status: 'in_stock' as const,
@@ -154,6 +236,9 @@ describe('useProductsStore', () => {
     );
     expect(fetchSpy).toHaveBeenCalledWith(
       expect.stringContaining('stock_status=in_stock'),
+    );
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining('search=Watch'),
     );
     expect(state.products).toEqual(mockProducts);
     expect(state.total).toBe(1);

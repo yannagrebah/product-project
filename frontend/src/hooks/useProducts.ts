@@ -14,6 +14,7 @@ export interface UseProductsReturn {
   totalPages: number;
   category: ProductCategory | null;
   stock_status: ProductStockStatus | null;
+  search: string;
   viewMode: ViewMode;
   isLoading: boolean;
   error: string | null;
@@ -21,6 +22,7 @@ export interface UseProductsReturn {
   setLimit: (limit: number) => void;
   setCategory: (category: ProductCategory | null) => void;
   setStockStatus: (stockStatus: ProductStockStatus | null) => void;
+  setSearch: (search: string) => void;
   setViewMode: (viewMode: ViewMode) => void;
   resetFilters: () => void;
   refetch: () => Promise<void>;
@@ -35,6 +37,7 @@ export function useProducts(): UseProductsReturn {
     totalPages,
     category,
     stock_status,
+    search,
     viewMode,
     isLoading,
     error,
@@ -42,6 +45,7 @@ export function useProducts(): UseProductsReturn {
     setLimit,
     setCategory,
     setStockStatus,
+    setSearch,
     setViewMode,
     resetFilters,
     fetchProducts,
@@ -59,6 +63,7 @@ export function useProducts(): UseProductsReturn {
     totalPages,
     category,
     stock_status,
+    search,
     viewMode,
     isLoading,
     error,
@@ -66,6 +71,7 @@ export function useProducts(): UseProductsReturn {
     setLimit,
     setCategory,
     setStockStatus,
+    setSearch,
     setViewMode,
     resetFilters,
     refetch: fetchProducts,

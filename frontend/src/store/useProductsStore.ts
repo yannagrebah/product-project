@@ -16,6 +16,7 @@ export interface ProductsState {
   totalPages: number;
   category: ProductCategory | null;
   stock_status: ProductStockStatus | null;
+  search: string;
   viewMode: ViewMode;
   isLoading: boolean;
   error: string | null;
@@ -25,6 +26,7 @@ export interface ProductsState {
   setLimit: (limit: number) => void;
   setCategory: (category: ProductCategory | null) => void;
   setStockStatus: (stockStatus: ProductStockStatus | null) => void;
+  setSearch: (search: string) => void;
   setViewMode: (viewMode: ViewMode) => void;
   resetFilters: () => void;
   fetchProducts: () => Promise<void>;
@@ -42,6 +44,7 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
   totalPages: 1,
   category: null,
   stock_status: null,
+  search: '',
   viewMode: 'grid',
   isLoading: false,
   error: null,
@@ -66,18 +69,23 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
     void get().fetchProducts();
   },
 
+  setSearch: (search: string) => {
+    set({ search, page: 1 });
+    void get().fetchProducts();
+  },
+
   setViewMode: (viewMode: ViewMode) => {
     set({ viewMode });
   },
 
   resetFilters: () => {
-    set({ category: null, stock_status: null, page: 1 });
+    set({ category: null, stock_status: null, search: '', page: 1 });
     void get().fetchProducts();
   },
 
   fetchProducts: async () => {
     set({ isLoading: true, error: null });
-    const { page, limit, category, stock_status } = get();
+    const { page, limit, category, stock_status, search } = get();
 
     const params = new URLSearchParams();
     params.set('page', page.toString());
@@ -88,6 +96,9 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
     }
     if (stock_status) {
       params.set('stock_status', stock_status);
+    }
+    if (search && search.trim() !== '') {
+      params.set('search', search.trim());
     }
 
     try {
