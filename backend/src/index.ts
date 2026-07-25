@@ -27,6 +27,20 @@ async function getExpressApp(): Promise<Express> {
   return expressApp;
 }
 
+function parseBufferEncoding(encoding: unknown): BufferEncoding {
+  if (typeof encoding === 'string' && Buffer.isEncoding(encoding)) {
+    return encoding;
+  }
+  return 'utf8';
+}
+
+function normalizeError(err: unknown): Error {
+  if (err instanceof Error) {
+    return err;
+  }
+  return new Error(typeof err === 'string' ? err : String(err));
+}
+
 export default {
   async fetch(request: Request): Promise<Response> {
     const app = await getExpressApp();
@@ -47,16 +61,10 @@ export default {
       const chunks: Uint8Array[] = [];
 
       // Intercept response writes
-
       res.write = (chunk: any, encoding?: any) => {
         if (chunk) {
           if (typeof chunk === 'string') {
-            chunks.push(
-              Buffer.from(
-                chunk,
-                typeof encoding === 'string' ? encoding : 'utf8',
-              ),
-            );
+            chunks.push(Buffer.from(chunk, parseBufferEncoding(encoding)));
           } else if (Buffer.isBuffer(chunk) || chunk instanceof Uint8Array) {
             chunks.push(chunk);
           }
@@ -67,12 +75,7 @@ export default {
       res.end = ((chunk?: any, encoding?: any) => {
         if (chunk) {
           if (typeof chunk === 'string') {
-            chunks.push(
-              Buffer.from(
-                chunk,
-                typeof encoding === 'string' ? encoding : 'utf8',
-              ),
-            );
+            chunks.push(Buffer.from(chunk, parseBufferEncoding(encoding)));
           } else if (Buffer.isBuffer(chunk) || chunk instanceof Uint8Array) {
             chunks.push(chunk);
           }
@@ -113,12 +116,12 @@ export default {
               req.push(Buffer.from(buf));
               req.push(null);
             })
-            .catch(reject);
+            .catch((err) => reject(normalizeError(err)));
         } else {
           req.push(null);
         }
       } catch (err) {
-        reject(err);
+        reject(normalizeError(err));
       }
     });
   },
