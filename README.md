@@ -65,7 +65,7 @@ product-project/
 ### Prérequis
 
 - Node.js >= 18.x
-- PNPM >= 8.x
+- PNPM | Yarn >= 1.x | npm
 
 ### 1. Installation des Dépendances
 
