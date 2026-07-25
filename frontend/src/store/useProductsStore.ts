@@ -67,12 +67,14 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
   error: null,
 
   setPage: (page: number) => {
-    set({ page });
+    const numericPage = Number(page) || 1;
+    set({ page: numericPage });
     void get().fetchProducts();
   },
 
   setLimit: (limit: number) => {
-    set({ limit, page: 1 });
+    const numericLimit = Number(limit) || 10;
+    set({ limit: numericLimit, page: 1 });
     void get().fetchProducts();
   },
 
@@ -106,9 +108,12 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
     set({ isLoading: true, error: null });
     const { page, limit, category, stock_status, search, products: currentProducts } = get();
 
+    const numericPage = Number(page) || 1;
+    const numericLimit = Number(limit) || 10;
+
     const params = new URLSearchParams();
-    params.set('page', page.toString());
-    params.set('limit', limit.toString());
+    params.set('page', numericPage.toString());
+    params.set('limit', numericLimit.toString());
 
     if (category) {
       params.set('category', category);
@@ -135,10 +140,10 @@ export const useProductsStore = create<ProductsState>((set, get) => ({
 
       set({
         products: stableProducts,
-        total: data.total,
-        page: data.page,
-        limit: data.limit,
-        totalPages: data.totalPages,
+        total: Number(data.total) || 0,
+        page: Number(data.page) || numericPage,
+        limit: Number(data.limit) || numericLimit,
+        totalPages: Number(data.totalPages) || 1,
         isLoading: false,
         isInitialized: true,
       });
