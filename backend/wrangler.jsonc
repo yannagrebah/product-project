@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "product-project-backend",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-24",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "observability": {
+    "enabled": true
+  },
+  "alias": {
+    "@nestjs/websockets/socket-module": "./src/common/mocks/empty.js",
+    "@nestjs/microservices/microservices-module": "./src/common/mocks/empty.js",
+    "@nestjs/microservices": "./src/common/mocks/empty.js"
+  }
+}
