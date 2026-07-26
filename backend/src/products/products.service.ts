@@ -8,7 +8,9 @@ export class ProductsService {
   private readonly products: Product[] = PRODUCTS_SEED;
 
   getProducts(query: GetProductsDto): PaginatedProductsResponse {
-    const { page = 1, limit = 10, category, stock_status, search } = query;
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+    const { category, stock_status, search } = query;
 
     let filteredProducts = this.products;
 
